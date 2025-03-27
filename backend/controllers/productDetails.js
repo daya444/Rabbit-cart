@@ -197,4 +197,89 @@ let product = await Product.find(query).sort(sort).limit(Number(limit)|| 0)
 }
 
 
+// to get single product
+export const singleProduct = async (req, res) => {
+    try {
+      const product = await Product.findById(req.params.id);
+ 
+      if (product) {
+         res.status(200).json(product); 
+      } else {
+         console.error("Product not found");
+         res.status(404).json({ message: "Product not found" }); 
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal Server Error" }); 
+    }
+ };
+
+ // to get similar product
+
+ export const similarProduct = async(req,res)=>{
+    const {id} = req.params
+
+    try{
+         const product = await Product.findById(id)
+         if (!product) {
+            res.status(400).json({message : "product not found"})
+         }
+
+         const similarItems = await Product.find({
+            _id :{$ne : id}, //exclude current product
+            category : product.category,
+            gender :product.gender
+         }).limit(4)
+
+         res.json(similarItems)
+
+    }catch(err){
+        console.log(err)
+        res.status(500).json({message : "Server Error"})
+
+    }
+   
+
+ }
+
+ //best seller
+ 
+export const bestSeller = async (req, res) => {
+    try {
+        
+        const topProducts = await Product.findOne()
+            .sort({ rating: -1 })
+           
+      if (topProducts){
+        res.status(200).json(topProducts);
+      }else {
+        res.status(404).json({ message:"No best seller found"})
+      }
+       
+    } catch (error) {
+        console.error("Error fetching best sellers:", error);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+ 
+
+// new arrivals
+
+export const newArrivals =async (req,res)=>{
+      try {
+        const newArrival = await Product.find().sort({
+            createdAt : -1
+        }).limit(8)
+       
+        res.json(newArrival)
+
+      } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "Server error", error: error.message });
+        
+      }
+}
+
+
+
 

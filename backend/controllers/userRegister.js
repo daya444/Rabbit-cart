@@ -14,7 +14,8 @@ export const register = async (req,res)=> {
         await user.save()
 
     // Create JWT token
-    const payload = { user: { id: user._id, role: user.role } };
+    const payload = { user: { _id: user._id, role: user.role } };
+  
     const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: "15d" });
 
   
@@ -53,7 +54,7 @@ export const login = async (req,res)=>{
          let isMatch =  await user.comparePassword(password)
 
          if(!isMatch){
-            return res.status(401).json({message : "Invalid credentials"})
+            return res.status(401).json({message : "Invalid Password"})
          }
 
           // Create JWT token
