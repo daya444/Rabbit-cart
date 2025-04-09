@@ -2,6 +2,7 @@ import { Button } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
+import axios from "axios"
 
 export const NewArrivals = () => {
 
@@ -13,184 +14,26 @@ export const NewArrivals = () => {
     const [canScrollLeft,setCanScrollLeft] = useState(false)
     const [canScrollRight,setCanScrollRight]=useState(true)
 
+    const [newArrivals,setNewArrivals] = useState([])
 
 
 
+    useEffect(()=>{
+
+      const fetchNewArrivals = async()=>{
+         try {
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/new-arrivals`)
+
+            setNewArrivals(response.data)
+         } catch (error) {
+            console.error("error fetching the newArrivals",error)
+         }
+      }
+      fetchNewArrivals()
+
+    },[])
 
 
-
-    const newArrivals = [
-      {
-         _id : 1,
-         name: "stylis jacket",
-         price : 12,
-         image : [
-            {
-                url:"https://picsum.photos/200?random=1",
-                alttext :"stylist jacket"
-            }
-         ]
-
-      },
-      {
-        _id : 2,
-        name: "stylis jacket",
-        price : 12,
-        image : [
-           {
-               url:"https://picsum.photos/200?random=2",
-               alttext :"stylist jacket"
-           }
-        ]
-
-     },
-     {
-        _id : 3,
-        name: "stylis jacket",
-        price : 12,
-        image : [
-           {
-               url:"https://picsum.photos/200?random=13",
-               alttext :"stylist jacket"
-           }
-        ]
-
-     },
-     {
-        _id : 4,
-        name: "stylis jacket",
-        price : 12,
-        image : [
-           {
-               url:"https://picsum.photos/200?random=14",
-               alttext :"stylist jacket"
-           }
-        ]
-
-     },
-     {
-        _id : 5,
-        name: "stylis jacket",
-        price : 12,
-        image : [
-           {
-               url:"https://picsum.photos/200?random=15",
-               alttext :"stylist jacket"
-           }
-        ]
-
-     },
-     {
-        _id : 6,
-        name: "stylis jacket",
-        price : 12,
-        image : [
-           {
-               url:"https://picsum.photos/200?random=16",
-               alttext :"stylist jacket"
-           }
-        ]
-
-     },
-     {
-        _id : 7,
-        name: "stylis jacket",
-        price : 12,
-        image : [
-           {
-               url:"https://picsum.photos/200?random=17",
-               alttext :"stylist jacket"
-           }
-        ]
-
-     },
-     {
-        _id : 8,
-        name: "stylis jacket",
-        price : 12,
-        image : [
-           {
-               url:"https://picsum.photos/200?random=18",
-               alttext :"stylist jacket"
-           }
-        ]
-
-     },
-     {
-        _id : 9,
-        name: "stylis jacket",
-        price : 12,
-        image : [
-           {
-               url:"https://picsum.photos/200?random=19",
-               alttext :"stylist jacket"
-           }
-        ]
-
-     },
-     {
-        _id : 10,
-        name: "stylis jacket",
-        price : 12,
-        image : [
-           {
-               url:"https://picsum.photos/200?random=110",
-               alttext :"stylist jacket"
-           }
-        ]
-
-     },
-     {
-        _id : 11,
-        name: "stylis jacket",
-        price : 12,
-        image : [
-           {
-               url:"https://picsum.photos/200?random=17",
-               alttext :"stylist jacket"
-           }
-        ]
-
-     },
-     {
-        _id : 12,
-        name: "stylis jacket",
-        price : 12,
-        image : [
-           {
-               url:"https://picsum.photos/200?random=18",
-               alttext :"stylist jacket"
-           }
-        ]
-
-     },
-     {
-        _id : 13,
-        name: "stylis jacket",
-        price : 12,
-        image : [
-           {
-               url:"https://picsum.photos/200?random=19",
-               alttext :"stylist jacket"
-           }
-        ]
-
-     },
-     {
-        _id : 14,
-        name: "stylis jacket",
-        price : 12,
-        image : [
-           {
-               url:"https://picsum.photos/200?random=110",
-               alttext :"stylist jacket"
-           }
-        ]
-
-     },
-
-
-    ]
 
     const handleMouseDown = (e)=>{
       setIsDragging(true);
@@ -237,7 +80,7 @@ export const NewArrivals = () => {
          container.addEventListener("scroll",updateScrollButton)
          updateScrollButton()
       }
-    })
+    },[newArrivals])
   return (
     <section className=''>
         <div className='container mx-auto text-center relative '>
@@ -277,7 +120,7 @@ export const NewArrivals = () => {
      ref={scrollRef} className=' container mx-auto overflow-x-scroll flex space-x-6 relative'>
           {newArrivals.map((product,index)=>(
             <div key={product._id} className='min-w-100% sm:min-w-[50%] lg:min-w-[30%] relative'>
-                 <img src={product.image[0]?.url} alt={product.name} className='w-full rounded-lg object-cover'/>
+                 <img src={product.images[0]?.url} alt={product.name} className='w-full rounded-lg object-cover'/>
                  <div className='absolute bottom-0 right-0 left-0 bg-opacity-0 backdrop-blur-md text-white rounded-b-lg  p-4'>
                    
                    <Link to={`/product/${product._id}`} className='block'>

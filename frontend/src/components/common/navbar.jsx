@@ -4,11 +4,15 @@ import { HiOutlineUser ,HiOutlineShoppingBag,HiBars3BottomRight} from "react-ico
 import { SearchBar } from './searchBar';
 import {CartDrawer} from "../layout/cartDrawer"
 import { IoMdClose } from 'react-icons/io';
+import { useSelector } from 'react-redux';
 
 export const Navbar = () => {
 
   const [open, setOpen] = useState(false);
   const [navDrawerOpen,setNavDrawerOpen] = useState(false)
+   const {cart}= useSelector((state)=>state.cart)
+
+   const cartCount = cart?.products?.reduce((total,product)=>total + product.quantity,0)
 
 
 
@@ -32,23 +36,25 @@ export const Navbar = () => {
    <nav className=' container flex items-center justify-between mx-auto mt-2  '>
 
      <div >
-       <Link to="/"  className='text-2xl font-medium'>
-          Rabbit
+       <Link to="/"  className='text-2xl font-medium flex justify-center items-center gap-1'>
+       <img  className='rounded-full h-5 w-5' src='/assets/Rabbit-64.webp'/>
+         <span> Rabbit</span>
+         
        </Link>
      </div>
 
      <div className='hidden md:flex space-x-6 '>
-        <Link to='/collection' className='text-gray-600 hover:text-black text-sm font-medium uppercase'>
+        <Link  to='/collections/all?gender=Men' className='text-gray-600 hover:text-black text-sm font-medium uppercase'>
         Mens
         </Link>
-        <Link className='text-gray-700 hover:text-black text-sm font-medium uppercase'>
+        <Link  to='/collections/all?gender=Women' className='text-gray-700 hover:text-black text-sm font-medium uppercase'>
         women
         </Link>
-        <Link className='text-gray-700 hover:text-black text-sm font-medium uppercase'>
-        top wear
+        <Link to='/collections/all?category=Top Wear' className='text-gray-700 hover:text-black text-sm font-medium uppercase'>
+        Top wear
         </Link>
-        <Link className='text-gray-700 hover:text-black text-sm font-medium uppercase'>
-        bottom wear
+        <Link to='/collections/all?category=Bottom Wear' className='text-gray-700 hover:text-black text-sm font-medium uppercase'>
+        Bottom wear
         </Link>
 
      </div>
@@ -66,7 +72,9 @@ export const Navbar = () => {
 
         <button onClick={showDrawer} className='relative hover:text-black'>
             <HiOutlineShoppingBag className='h-6 w-6 text-gray-700'/>
-            <span className='absolute bg-red-600 px-2 py-0.3 rounded-full text-xs  text-white top-1'>3</span>
+            {cartCount >0  && (
+              <span className='absolute bg-red-600 px-2 py-0.3 rounded-full text-xs  text-white top-1'>{cartCount}</span>
+            )}
         </button>
       
 
@@ -101,19 +109,19 @@ export const Navbar = () => {
       </h2>
 
       <nav  className='flex flex-col mt-4 gap-y-4 '  >
-        <Link to="#" onClick={toggleNavDrawer} >
+        <Link to='/collections/all?gender=Men'onClick={toggleNavDrawer} >
           Men
         </Link>
 
-        <Link to="#" onClick={toggleNavDrawer}>
+        <Link  to='/collections/all?gender=Women' onClick={toggleNavDrawer}>
           Women
         </Link>
 
-        <Link to="#" onClick={toggleNavDrawer}>
+        <Link to='/collections/all?category=Top Wear' onClick={toggleNavDrawer}>
           Top Wear
         </Link>
 
-        <Link to="#" onClick={toggleNavDrawer}>
+        <Link to='/collections/all?category=Bottom Wear' onClick={toggleNavDrawer}>
           Bottom Wear
         </Link>
 

@@ -142,7 +142,7 @@ export const FilteredSidebar = () => {
 
    
     return (
-        <div className='p-4'>
+        <div className='p-4 pb-20 overflow-y-auto h-screen'>
             
             <h3 className='text-xl mb-2 font-medium text-gray-800'>Filter</h3>
 

@@ -1,15 +1,43 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { loginUser } from '../../redux/slices/authSlice'
+import {useDispatch, useSelector} from "react-redux"
+import { mergeGuestCart } from '../../redux/slices/cartSlice'
 
  export  const Login = () => {
   const [email,setEmail]= useState("")
   const [password,setPassword]= useState("")
 
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const {user,guestId,error} = useSelector((state)=>state.auth)
+  const {cart} = useSelector((state)=>state.cart)
+
+
+  //get redirect paramater and check if its checkout or somethings
+
+  const redirect = new URLSearchParams(location.search).get("redirect") || "/";
+  const isCheckoutRedirect = redirect.includes("checkout")
+
   const handleSubmit = (e)=> {
    e.preventDefault()
-   console.log("email" ,email , "password" ,password)
+   dispatch(loginUser({email,password}))
 
   }
+
+  useEffect(()=> {
+    if(user){
+        if(cart?.products.length > 0 && guestId){
+            dispatch(mergeGuestCart({guestId,user})).then(()=>{
+                navigate(isCheckoutRedirect ? "/checkout" : "/")
+            })
+
+        }else {
+            navigate(isCheckoutRedirect ? "/checkout" : "/")
+        }
+    }
+  },[user,guestId,cart,navigate,dispatch,isCheckoutRedirect])
 
   return (
    <div className='flex'>
@@ -28,7 +56,7 @@ import { Link } from 'react-router-dom'
                     Hey there! 👋
                 </h2>
                 <p className='text-center mb-6 text-sm'>
-                    Enter the Username and Pssword to Login
+                    Enter the Username and Password to Login
                 </p>
 
                 <div className='mb-4'>
@@ -36,11 +64,13 @@ import { Link } from 'react-router-dom'
                          Email
                     </label>
                     <input
+
                     value={email}
                     className='border w-full h-9 rounded p-2'
                     type='email'
                     onChange={(e)=>setEmail(e.target.value)}
                     placeholder='Enter the email'
+                    required
                    
                     />
                 </div>
@@ -54,9 +84,16 @@ import { Link } from 'react-router-dom'
                     type='password'
                     onChange={(e)=>setPassword(e.target.value)}
                     placeholder='Enter the Password'
+                    required
                    
                     />
                 </div>
+
+                {error?.message && (
+                    <p className="text-red-600 font-semibold text-center mb-4">
+                        {error.message}
+                    </p>
+                    )}
 
                 <button
                 className='bg-black text-white w-full py-2 rounded hover:bg-gray-700 font-semibold'
@@ -68,7 +105,7 @@ import { Link } from 'react-router-dom'
 
             <p className='mt-6 text-sm text-center'>
               Don't have an account? <Link
-              to="/register"
+              to={`/register?redirect=${encodeURIComponent(redirect)}`}
               className='hover:underline text-blue-700'
               
               >

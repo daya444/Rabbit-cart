@@ -27,14 +27,15 @@ export const  createCheckout = async(req, res)=>{
 
         })
 
-        console.log(`checkout created for user : ${req.user._id} `)
+       
         res.status(201).json(newCheckout)
      
-    } catch (error) {
-        console.error( "Error creating in checkout session",error),
-        res.status(500).json({message: "Server Error"})
-        
-    }
+    }  catch (error) {
+        console.error("Checkout creation error:", error); // 👈 add this
+        res.status(500).json({ message: "Server Error", error: error.message }); // send actual message
+      }
+      
+    
 }
 
 //put api/checkout/:id/pay

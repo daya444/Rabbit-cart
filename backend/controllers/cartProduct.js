@@ -142,6 +142,8 @@ export const updateCart = async (req, res) => {
 export const deleteCart = async (req, res) => {
 
     const { userId, guestId, productId, size, color } = req.body
+    console.log("Received body:", req.body)
+
 
     try {
         let cart = await getUser(guestId, userId)

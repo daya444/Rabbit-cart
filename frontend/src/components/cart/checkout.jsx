@@ -1,61 +1,117 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { PaypalButton } from './paypalButton'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { createCheckout } from '../../redux/slices/checkoutSlice'
+import axios from 'axios'
 
-const  cart = {
-    products : [
-        {
-          name :"stylish jacket",
-          size : "M",
-          color : "green",
-          price : 120,
-          image : "https://picsum.photos/200?random=19"
-        },
-        {
-            
-                name :"pant",
-                size : "M",
-                color : "green",
-                price : 120,
-                image : "https://picsum.photos/200?random=13"
-              
-
-        }
-      
-    ],
-    totalPrice :  240
-}
 
 
 
 export const Checkout = () => {
 
+    const dispatch = useDispatch()
+    const {user} = useSelector((state)=>state.auth)
+    const {cart,loading,error} =useSelector((state)=>state.cart)
+
     const navigate = useNavigate()
+
+    useEffect(()=>{
+        if(!cart || !cart.products || cart.products.length === 0){
+            navigate("/")
+        }
+    },[cart,navigate])
+
+    
+   
+
+   
+
+
 
     const [shippingAddress ,setShippinAddress] = useState({
         firstname : "",
         lastname : "",
         address : "",
         city : "",
-        postalcode : "",
+        postalCode : "",
         country : "",
         phone : "",
 
     })
+    
 
     const [checkoutId,setCheckoutId] = useState(null)
 
-    const handleCreateCheckoutId = (e)=> {
+    const handleCreateCheckoutId = async(e)=> {
         e.preventDefault();
-        setCheckoutId(123)
+        
+      if(cart && cart.products.length > 0){
+        const res =  await dispatch(createCheckout({
+            
+            checkoutItems : cart?.products,
+            shippingAddress,
+            totalPrice : cart.totalPrice,
+            paymentMethod : "paypal"
+        }))
+      
+        if(res && res.payload._id){
+            setCheckoutId(res.payload._id)
+            navigate("/order-confirmation");
+           console.log( "id",res.payload._id)
+        }
+      }
     }
 
-    const handlePaymentSuccess =(Details)=> {
+    
 
-        console.log("payment success" , Details)
-        navigate('/order-confirmation')
+    const handlePaymentSuccess =async(details)=> {
+
+        try {
+         
+            const res = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/checkout/${checkoutId}/pay`,
+                {
+                    paymentDetails : "paid",paymentStatus :  details
+
+              },{
+                headers :{
+                    Authorization : `Bearer ${localStorage.getItem("userToken")}`
+                }
+              }
+            
+            )
+
+            await handleFinalizeCheckout(checkoutId)
+            
+
+        } catch (error) {
+            console.error(error)
+            
+        }
+
 
     }
+
+    const  handleFinalizeCheckout = async() =>{
+        try {
+            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/checkout/${checkoutId}/pay`,
+
+                {
+                    headers :{
+                        Authorization : `Bearer ${localStorage.getItem("userToken")}`
+                    }
+                  }
+            )
+
+            navigate("/order-confirmation")
+            
+        } catch (error) {
+            console.error(error)
+        }
+
+    }
+
+      
   return (
     <div className=' grid  grid-cols-1  lg:grid-cols-2 max-w-7xl mx-auto gap-4 py-10 px-6 tracking-tighter'>
 
@@ -77,7 +133,7 @@ export const Checkout = () => {
                     <input  
                     disabled
                     className='w-full border py-2 rounded-md px-3' 
-                    value={"user@gmail.com"} />
+                    value={user?.email} />
 
                     <h3 className='mt-3  text-lg '>Delivery</h3>
 
@@ -90,7 +146,7 @@ export const Checkout = () => {
                              placeholder='Enter your Firstname'
                              value={shippingAddress.firstname}
                              onChange={(e)=> setShippinAddress({...shippingAddress,firstname : e.target.value})}
-                             
+                             required
                              />
                         </div>
 
@@ -113,6 +169,7 @@ export const Checkout = () => {
                         className='w-full py-2  px-3 rounded-md border'
                         value={shippingAddress.address}
                         onChange={(e)=> setShippinAddress({...shippingAddress,address : e.target.value})}
+                        required
                         />
                     </div>
 
@@ -125,6 +182,7 @@ export const Checkout = () => {
                                 placeholder='Enter your City'
                                 value={shippingAddress.city}
                                 onChange={(e)=> setShippinAddress({...shippingAddress,city : e.target.value})}
+                                required
                                 />
                             </div>
 
@@ -132,8 +190,9 @@ export const Checkout = () => {
                                 <label >Postal Code</label>
                                 <input 
                                 className='w-full py-2  px-3 rounded-md border' 
-                                value={shippingAddress.postalcode}
-                                onChange={(e)=> setShippinAddress({...shippingAddress,postalcode : e.target.value})}
+                                value={shippingAddress.postalCode}
+                                onChange={(e)=> setShippinAddress({...shippingAddress,postalCode : e.target.value})}
+                                required
                                 placeholder='Enter your Postal Code'/> 
                             </div>
 
@@ -147,6 +206,7 @@ export const Checkout = () => {
                         className='w-full py-2  px-3 rounded-md border'
                         value={shippingAddress.country}
                         onChange={(e)=> setShippinAddress({...shippingAddress,country : e.target.value})}
+                        required
                         />
                     </div>
 
@@ -157,6 +217,7 @@ export const Checkout = () => {
                         className='w-full py-2  px-3 rounded-md border'
                         value={shippingAddress.phone}
                         onChange={(e)=> setShippinAddress({...shippingAddress,phone : e.target.value})}
+                        required
                         />
                     </div>
 
@@ -168,7 +229,9 @@ export const Checkout = () => {
                     ) : (
                         <div>
                           <h3 className='mb-4 text-lg'>Pay with PayPal</h3>
-                          <PaypalButton amount={1000} onError={(err)=> alert("Payment failed.Try Again")}
+                          <PaypalButton
+                           amount={cart?.totalPrice} 
+                           onError={(err)=> alert("Payment failed.Try Again")}
                             onSuccess={handlePaymentSuccess}
                             />
   
@@ -217,7 +280,7 @@ export const Checkout = () => {
 
             <div className='flex items-center justify-between mb-4'>
                 <p>Subtotal</p>
-                <p>${cart.totalPrice.toString()}</p>
+                <p>${cart?.totalPrice}</p>
             </div>
             <div className='flex items-center justify-between mb-4'>
                 <p>Shipping</p>
@@ -226,7 +289,7 @@ export const Checkout = () => {
 
             <div className='flex items-center justify-between mb-4 py-4  border-t'>
             <p>Total</p>
-            <p>${cart.totalPrice.toString()}</p>
+            <p>${cart.totalPrice}</p>
  
             </div>
         </div>

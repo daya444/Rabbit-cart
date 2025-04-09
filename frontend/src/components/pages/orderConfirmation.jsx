@@ -1,49 +1,35 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { clearCart } from '../../redux/slices/cartSlice'
 
 
 
 
-const checkout  = { 
 
-    _id : 12345,
-    createdAt : new Date() ,
-    checkoutItems : [
-        {
-            productId : "1",
-            name : "jacket",
-            color : "green",
-            size : "M",
-            price:120,
-            quantity : 1,
-            image : "https://picsum.photos/200?random=13"
-        },
-        {
-            productId : "2",
-            name : "T-shirt",
-            color : "green",
-            size : "M",
-            price:120,
-            quantity : 1,
-            image : "https://picsum.photos/200?random=1"
-        },
-        
-
-    ],
-    shippingAddress : {
-        address : "123 sample street",
-        city : " cbe",
-        country: "india"
-    }
- 
-}
 
 export const   OrderConfirmation = () => {
+
+    const {checkout}  = useSelector((state)=>state.checkout)
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const calculateEstimatedDelivery = (createdAt)=> {
         let orderDate = new Date(createdAt)
         orderDate.setDate(orderDate.getDate()+ 10)
         return orderDate.toLocaleDateString()
     }
+
+    console.log("order component ")
+
+    // useEffect(()=>{
+
+    //     if(checkout && checkout._id){
+    //         dispatch(clearCart())
+    //     }else{
+    //         navigate("/my-orders")
+    //     }
+    // },[checkout,dispatch,navigate])
 
   return (
     <div className='max-w-4xl bg-white mx-auto p-6'>
@@ -72,7 +58,7 @@ export const   OrderConfirmation = () => {
                 </div>
 
                 <div className='mb-20'>
-                  {checkout.checkoutItems.map((product,index)=> (
+                  {checkout?.checkoutItems?.map((product,index)=> (
                     <div className='flex justify-between mb-4 border-b p-2'>
                         <div className='flex items-start'>
                             <img className='w-16 h-16 object-cover mr-4 rounded' src={product.image} alt={product.name}/>
@@ -102,8 +88,8 @@ export const   OrderConfirmation = () => {
 
                     <div className=''>
                     <h2 className='font-bold'>Delivery</h2>
-                    <p className='text-sm text-gray-400'>{checkout.shippingAddress.address}</p>
-                    <p className='text-sm text-gray-400'>{checkout.shippingAddress.city},{checkout.shippingAddress.country}</p>
+                    <p className='text-sm text-gray-400'>{checkout?.shippingAddress?.address}</p>
+                    <p className='text-sm text-gray-400'>{checkout?.shippingAddress?.city},{checkout?.shippingAddress?.country}</p>
                    
                     </div>
                 </div>    

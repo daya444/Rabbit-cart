@@ -1,150 +1,52 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { RiDeleteBin3Line } from 'react-icons/ri'
+import { useDispatch, useSelector } from 'react-redux'
+import { removeFromCart, updateCartItemQuantity } from '../../redux/slices/cartSlice'
 
-export const CartContent = () => {
+export const CartContent = ({cart,guestId,userId}) => {
 
-    const product = [
-        {
-            productId : 1 ,
-            name : "t-shirt",
-            size: "m" ,
-            color: " red",
-            quantity : 1,
-            price :12,
-            image : "https://picsum.photos/200?random=1"
+    const dispatch = useDispatch()
 
- 
+    console.log("content ",cart)
+    
+
+    const handleAddToCart =(productId,delta,quantity,size,color)=>{
+
+        const newQuantity = quantity + delta
+        if(newQuantity >=1){
+            dispatch(updateCartItemQuantity({
+                productId,
+                guestId,
+                userId,
+                quantity :newQuantity,
+                size,
+                color
+            }))
         }
-        ,
-        {
-            productId : 2 ,
-            name : "shirt",
-            size: "m" ,
-            color: "blue",
-            quantity : 1,
-            price :12,
-            image : "https://picsum.photos/200?random=2"
 
- 
-        },
-        {
-            productId : 3 ,
-            name : "pant",
-            size: "m" ,
-            color: "red",
-            quantity : 1,
-            price :12,
-            image : "https://picsum.photos/200?random=3"
+    }
 
- 
-        }
-        , {
-            productId : 4 ,
-            name : "t-shirt",
-            size: "m" ,
-            color: " red",
-            quantity : 1,
-            price :12,
-            image : "https://picsum.photos/200?random=4"
+    const handleRemoveFromCart = ({productId,size,color})=>{
+        dispatch(removeFromCart({
+               productId,
+                guestId,
+                userId,
+                size,
+                color
 
- 
-        }
-        ,
-        {
-            productId : 5 ,
-            name : "shirt",
-            size: "m" ,
-            color: "blue",
-            quantity : 1,
-            price :12,
-            image : "https://picsum.photos/200?random=5"
+        }))
+    }
 
- 
-        },
-        {
-            productId : 6,
-            name : "pant",
-            size: "m" ,
-            color: "red",
-            quantity : 1,
-            price :12,
-            image : "https://picsum.photos/200?random=6"
 
- 
-        },
-        {
-            productId : 1 ,
-            name : "t-shirt",
-            size: "m" ,
-            color: " red",
-            quantity : 1,
-            price :12,
-            image : "https://picsum.photos/200?random=1"
+    
+    
 
- 
-        }
-        ,
-        {
-            productId : 2 ,
-            name : "shirt",
-            size: "m" ,
-            color: "blue",
-            quantity : 1,
-            price :12,
-            image : "https://picsum.photos/200?random=2"
-
- 
-        },
-        {
-            productId : 3 ,
-            name : "pant",
-            size: "m" ,
-            color: "red",
-            quantity : 1,
-            price :12,
-            image : "https://picsum.photos/200?random=3"
-
- 
-        }
-        , {
-            productId : 4 ,
-            name : "t-shirt",
-            size: "m" ,
-            color: " red",
-            quantity : 1,
-            price :12,
-            image : "https://picsum.photos/200?random=4"
-
- 
-        }
-        ,
-        {
-            productId : 5 ,
-            name : "shirt",
-            size: "m" ,
-            color: "blue",
-            quantity : 1,
-            price :12,
-            image : "https://picsum.photos/200?random=5"
-
- 
-        },
-        {
-            productId : 6,
-            name : "pant",
-            size: "m" ,
-            color: "red",
-            quantity : 1,
-            price :12,
-            image : "https://picsum.photos/200?random=6"
-
- 
-        }
-    ]
+    
+   
   return (
      <div className='flex-grow p-4 overflow-y-auto max-h-[80vh]'>
          <div>
-          {product.map((product,index)=>(
+          {cart.products.map((product,index)=>(
             <div 
             className='border-b py-4 flex  justify-between items-start'
             key={index}>
@@ -159,11 +61,33 @@ export const CartContent = () => {
                     </p>
 
                     <div className=' flex items-center mt-2 '>
-                        <button className='border text-sm px-2 py-1 rounded font-medium'>+</button>
+                        <button 
+                        onClick={()=>
+                            handleAddToCart(
+                                product.productId,
+                                -1,
+                                product.quantity,
+                                product.size,
+                                product.color
+                            )
+                        }
+                        
+                        className='border text-sm px-2 py-1 rounded font-medium'>-</button>
                         <span className='text-sm px-4'>
                             {product.quantity}
                         </span>
-                        <button  className='border text-sm px-2 py-1 rounded font-medium'>-</button>
+                        <button 
+                         onClick={()=>
+                            handleAddToCart(
+                                product.productId,
+                                1,
+                                product.quantity,
+                                product.size,
+                                product.color
+                            )
+                        }
+                        
+                        className='border text-sm px-2 py-1 rounded font-medium'>+</button>
                     </div>
                 </div>
 
@@ -171,7 +95,16 @@ export const CartContent = () => {
                     <p className='font-medium'>
                         {product.price.toLocaleString()}
                     </p>
-                    <button className='h-6 w-6  mt-2 hover:text-red-600'>
+                    <button 
+                   onClick={() =>
+                    handleRemoveFromCart({
+                      productId: product.productId,
+                      size: product.size,
+                      color: product.color
+                    })
+                  }
+                  
+                    className='h-6 w-6  mt-2 hover:text-red-600'>
                         <RiDeleteBin3Line/>
                     </button>
                 </div>
