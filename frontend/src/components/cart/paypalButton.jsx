@@ -25,7 +25,7 @@ export const PaypalButton = ({ amount, onSuccess, onError }) => {
           });
         }}
         onError={(err) => {
-          console.error("PayPal Checkout onError:", err);
+          console.error("Detailed PayPal Error:", JSON.stringify(err, null, 2));
           onError(err);
         }}
       />

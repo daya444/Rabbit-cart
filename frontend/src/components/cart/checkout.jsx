@@ -39,7 +39,7 @@ export const Checkout = () => {
         phone : "",
 
     })
-    
+   
 
     const [checkoutId,setCheckoutId] = useState(null)
 
@@ -57,13 +57,10 @@ export const Checkout = () => {
       
         if(res && res.payload._id){
             setCheckoutId(res.payload._id)
-            navigate("/order-confirmation");
-           console.log( "id",res.payload._id)
+           console.log(res.payload._id)
         }
       }
     }
-
-    
 
     const handlePaymentSuccess =async(details)=> {
 
@@ -110,6 +107,7 @@ export const Checkout = () => {
         }
 
     }
+    
 
       
   return (
@@ -239,6 +237,7 @@ export const Checkout = () => {
 
                     )}
                   </div>
+                  
 
                     
                     

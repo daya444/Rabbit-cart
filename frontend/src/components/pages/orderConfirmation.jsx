@@ -20,16 +20,18 @@ export const   OrderConfirmation = () => {
         return orderDate.toLocaleDateString()
     }
 
-    console.log("order component ")
+   
 
-    // useEffect(()=>{
+    useEffect(()=>{
 
-    //     if(checkout && checkout._id){
-    //         dispatch(clearCart())
-    //     }else{
-    //         navigate("/my-orders")
-    //     }
-    // },[checkout,dispatch,navigate])
+        if(checkout && checkout._id){
+            dispatch(clearCart())
+        }else{
+            navigate("/my-orders")
+        }
+    },[checkout,dispatch,navigate])
+
+    console.log( "checking",checkout)
 
   return (
     <div className='max-w-4xl bg-white mx-auto p-6'>
