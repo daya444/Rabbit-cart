@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "name": "backend_server",  
   "builds": [
     { "src": "server.js", "use": "@vercel/node" }
   ],
