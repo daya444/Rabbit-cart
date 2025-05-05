@@ -11,6 +11,7 @@ export const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [navDrawerOpen,setNavDrawerOpen] = useState(false)
    const {cart}= useSelector((state)=>state.cart)
+   const {user} = useSelector((state)=>state.auth)
 
    const cartCount = cart?.products?.reduce((total,product)=>total + product.quantity,0)
 
@@ -62,9 +63,9 @@ export const Navbar = () => {
      <div className='flex space-x-4 '>
 
 
-        <Link to='/admin' className='bg-black text-white px-2 rounded block hover:bg-gray-700'>
+      {user && user.role ==="admin" && (  <Link to='/admin' className='bg-black text-white px-2 rounded block hover:bg-gray-700'>
           Admin
-        </Link>
+        </Link>)}
  
         <Link  to="/profile" className='text-black'>
           <HiOutlineUser className=' h-6 w-6 hover:text-gray-700'/> 

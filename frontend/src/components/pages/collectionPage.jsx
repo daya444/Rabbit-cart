@@ -39,7 +39,7 @@ export const CollectionPage = () => {
         }
     }
    
-    console.log("daya",products)
+
     
 
     useEffect(()=>{

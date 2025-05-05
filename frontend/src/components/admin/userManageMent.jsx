@@ -1,7 +1,29 @@
 
-import React, { use, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { addUser, deleteUser, fetchUser, updateUser } from '../../redux/slices/adminSlice'
+import { useNavigate } from 'react-router-dom'
 
 export const UserManageMent = () => {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const {users,loading,error} = useSelector((state)=> state.admin)
+     const {user} = useSelector((state)=>state.auth)
+
+
+    useEffect(()=>{
+        dispatch(fetchUser())
+
+    },[dispatch])
+
+
+    useEffect(()=>{
+        if(!user && user.role !=="admin"){
+            navigate("/")
+        }
+    },[user,navigate])
+
 
     const [formData, setFormData] = useState({
         name: "",
@@ -10,24 +32,11 @@ export const UserManageMent = () => {
         role: "customer"
     })
 
-    const users = [
-        {
-            _id : 12345,
-            name: "daya",
-            email: "daya@gmail.com",
-            role: "admin"
-        },
-        {
-            _id : 1234,
-            name: "daya",
-            email: "daya@gmail.com",
-            role: "admin"
-        },
-
-    ]
+   
+    
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(formData);
+        dispatch(addUser(formData))
         setFormData({
 
             name: "",
@@ -39,15 +48,19 @@ export const UserManageMent = () => {
 
     }
 
-    const handleRolechange = (userId , newrole)=> {
-        console.log({id:userId,role :newrole})
+    const handleRolechange = ( name ,email,id, role)=> {
+        dispatch(updateUser({ name, email, role, id })); 
+     
     }
     const handleDeleteUser =(userId)=> {
         if(window.confirm("Are you sure you want to delete  this user")){
-            console.log("deleting user id :",userId)
+            dispatch(deleteUser(userId))
+        
         }
 
     }
+    if(loading) return <p>loading ...</p>
+    if(error) return <p>{error}</p>
 
 
     return (
@@ -135,7 +148,7 @@ export const UserManageMent = () => {
                                 <td >
                                     <select 
                                     value={user.role}
-                                    onChange={(e)=>handleRolechange(user._id,e.target.value)}
+                                    onChange={(e)=>handleRolechange(user.name,user.email, user._id,e.target.value,)}
                                     className='border p-2 rounded' name='role' >
 
                                         <option value='customer'>Customer</option>

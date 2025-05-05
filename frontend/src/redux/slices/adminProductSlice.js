@@ -50,7 +50,7 @@ export const  createProduct = createAsyncThunk("adminProduct/newProduct" , async
 
  export const updateProduct = createAsyncThunk("adminProduct/updateProduct",async({id ,productData})=>{
 
-    const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products${id}`,
+    const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/products/${id}`,
         productData,
 
         {
@@ -68,14 +68,14 @@ export const  createProduct = createAsyncThunk("adminProduct/newProduct" , async
  // async thunk for delete the product 
 
  export const deleteProduct = createAsyncThunk("adminProduct/deleteProduct",async({id})=>{
-    const response = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products${id}`,
+    const response = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/${id}`,
         {
             headers : {
                 Authorization :`Bearer ${localStorage.getItem("userToken")}`
             }
         }
     )
-    return response.data
+    return { id }; 
  })
 
 
@@ -132,6 +132,7 @@ const adminProductsSlice = createSlice({
             })
             .addCase(deleteProduct.fulfilled, (state, action) => {
                 state.loading = false;
+                
                 state.products = state.products.filter(product => product._id !== action.payload.id);
             })
             .addCase(deleteProduct.rejected, (state, action) => {

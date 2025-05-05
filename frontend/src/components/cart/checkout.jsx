@@ -22,12 +22,6 @@ export const Checkout = () => {
         }
     },[cart,navigate])
 
-    
-   
-
-   
-
-
 
     const [shippingAddress ,setShippinAddress] = useState({
         firstname : "",
@@ -52,7 +46,8 @@ export const Checkout = () => {
             checkoutItems : cart?.products,
             shippingAddress,
             totalPrice : cart.totalPrice,
-            paymentMethod : "paypal"
+            paymentMethod : "paypal",
+            
         }))
       
         if(res && res.payload._id){
@@ -62,36 +57,32 @@ export const Checkout = () => {
       }
     }
 
-    const handlePaymentSuccess =async(details)=> {
-
+    const handlePaymentSuccess = async (details) => {
         try {
-         
-            const res = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/checkout/${checkoutId}/pay`,
-                {
-                    paymentDetails : "paid",paymentStatus :  details
-
-              },{
-                headers :{
-                    Authorization : `Bearer ${localStorage.getItem("userToken")}`
-                }
-              }
-            
-            )
-
-            await handleFinalizeCheckout(checkoutId)
-            
-
+          const res = await axios.put(
+            `${import.meta.env.VITE_BACKEND_URL}/api/checkout/${checkoutId}/pay`,
+            {
+              paymentDetails: details,
+              paymentStatus: "paid"
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+              },
+            }
+          );
+      
+          await handleFinalizeCheckout(checkoutId);
+      
         } catch (error) {
-            console.error(error)
-            
+          console.error(error);
         }
-
-
-    }
+      };
+      
 
     const  handleFinalizeCheckout = async() =>{
         try {
-            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/checkout/${checkoutId}/pay`,
+            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/checkout/${checkoutId}/finalize`,
 
                 {
                     headers :{

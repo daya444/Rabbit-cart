@@ -1,21 +1,31 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { fetchAllOrders, updateOrderStatus } from '../../redux/slices/adminOrderSlice'
 
 export const OrderManageMent = () => {
 
-    const orders = [
-        {
-            _id : 123,
-            user : {
-                name : "daya"
-            },
-            totalPrice : 123,
-            status : "canceled"
-        }
-    ]
+  const { orders,loading,error} = useSelector((state)=>state.adminOrders)
+  const dispatch = useDispatch()
 
-    const handleStatusChange = (orderId , value)=> {
-         console.log(orderId,value)
+  const {user} = useSelector((state)=>state.auth)
+  const navigate = useNavigate()
+
+
+  useEffect(()=> {
+    if(!user || user.role !=="admin"){
+      navigate("/")
+    }else {
+        dispatch(fetchAllOrders())
     }
+
+  },[dispatch,navigate,user])
+
+  const handleStatusChange = (orderId, value) => {
+    
+    dispatch(updateOrderStatus({ id: orderId, status: value }));
+};
+
      
   return (
     <div className='max-w-7xl mx-auto mb-5    p-6'>
@@ -45,17 +55,17 @@ export const OrderManageMent = () => {
                                 <select 
                                  className=' border bg-gray-50 rounded border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 block p-2'
                                 onChange={(e)=>handleStatusChange(order._id ,e.target.value)} value={order.status}>
-                                    <option value="processing">Processing</option>
-                                    <option value="shipping">Shipping</option>
-                                    <option value="delivered">Delivered</option>
-                                    <option value="canceled">Canceled</option>
+                                    <option value="Processing">Processing</option>
+                                    <option value="Shipped">Shipped</option>
+                                    <option value="Delivered">Delivered</option>
+                                    <option value="Cancelled">Canceled</option>
                                 </select>
 
                             </td>
 
                             <td>
                                 <button 
-                                onChange={()=>handleStatusChange(order._id,"delivered")}
+                                onClick={()=>handleStatusChange(order._id,"Delivered")}
                                 className='bg-green-500 rounded text-white py-2 px-2 text-sm hover:bg-green-400 '>
                                     Mark As Deleiverd
                    

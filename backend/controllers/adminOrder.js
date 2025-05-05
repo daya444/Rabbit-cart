@@ -25,7 +25,7 @@ export const updateStatus = async ( req ,res)=> {
     
     const {id} = req.params
     try {
-         const order =await Order.findById(id)
+         const order =await Order.findById(id).populate("user","name email ")
          if(order){
             order.status = req.body.status || order.status;
             order.isDelivered = req.body.status === "Delivered" ? true : order.isDelivered;

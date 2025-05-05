@@ -19,11 +19,11 @@ export const FeaturedProducts = () => {
 
                    <h4 className='mb-6 text-lg text-gray-600'>
                     Discover high quality,comfortable clothing that effortessly 
-                    blends fashion and function.Desgined to make you feel great evry day.
+                    blends fashion and function.Desgined to make you feel great every day.
                    </h4>
 
                    <Link 
-                   to="/collection/all"
+                   to="/collections/all"
                    className=' bg-black text-white px-4 py-3 rounded-lg hover:bg-slate-600 text-lg'>
                    Shop Now
                    </Link>

@@ -11,7 +11,7 @@ import { mergeGuestCart } from '../../redux/slices/cartSlice'
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const location = useLocation()
-  const {user,guestId,error} = useSelector((state)=>state.auth)
+  const {user,guestId,error,loading} = useSelector((state)=>state.auth)
   const {cart} = useSelector((state)=>state.cart)
 
 
@@ -99,7 +99,7 @@ import { mergeGuestCart } from '../../redux/slices/cartSlice'
                 className='bg-black text-white w-full py-2 rounded hover:bg-gray-700 font-semibold'
                 type='submit'
                 >
-                    Sign In
+                   {loading ? "loading..." : "Sign In"}
                 </button>
             
 

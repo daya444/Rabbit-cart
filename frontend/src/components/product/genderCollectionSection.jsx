@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom'
             <h2 className=''>
                 Women's Collection
             </h2>
-            <Link className='underline hover:text-gray-500'>Shop Now</Link>
+            <Link to="/collections/all?gender=Women" className='underline hover:text-gray-500'>Shop Now</Link>
          </div>
         </div>
         <div className='relative flex-1'>
@@ -20,7 +20,7 @@ import { Link } from 'react-router-dom'
             <h2 className=''>
                 Men's Collection
             </h2>
-            <Link className='underline hover:text-gray-500'>Shop Now</Link>
+            <Link to="/collections/all?gender=Men" className='underline hover:text-gray-500'>Shop Now</Link>
          </div>
         </div>
         

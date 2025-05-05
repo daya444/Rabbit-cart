@@ -41,35 +41,32 @@ export const  createCheckout = async(req, res)=>{
 //put api/checkout/:id/pay
 //update the payment details
 
-export const updateCheckout = async(req,res)=>{
-
-    const {paymentDetails,paymentStatus} = req.body
+export const updateCheckout = async (req, res) => {
+    const { paymentDetails, paymentStatus } = req.body;
+  
     try {
-        const checkout = await Checkout.findById(req.params.id)
-        if(!checkout){
-            res.status(404).json({message: "checkout not found"})
-        }
-        
-        if(paymentStatus === "paid"){
-             checkout.isPaid = true,
-             checkout.paymentStatus = paymentStatus
-             checkout.paymentDetails = paymentDetails
-             checkout.paidAt =Date.now()
-             
-             await checkout.save()
-
-             res.status(200).json(checkout)
-        }else{
-            req.status(400).json({message: "Invalid payment status"})
-        }
-        
+      const checkout = await Checkout.findById(req.params.id);
+      if (!checkout) {
+        return res.status(404).json({ message: "Checkout not found" });
+      }
+  
+      if (paymentStatus.toLowerCase() === "paid") {
+        checkout.isPaid = true;
+        checkout.paymentStatus = paymentStatus;
+        checkout.paymentDetails = paymentDetails;
+        checkout.paidAt = Date.now();
+  
+        await checkout.save();
+        return res.status(200).json(checkout);
+      } else {
+        return res.status(400).json({ message: "Invalid payment status" });
+      }
     } catch (error) {
-        console.error( error)
-        res.status(500).json({message: "Server error"})
-        
+      console.error(error);
+      return res.status(500).json({ message: "Server error" });
     }
-
-}
+  };
+  
 
 
 // post /api/checkout/:id/finalize
@@ -94,7 +91,8 @@ try {
             paidAt : checkout.paidAt,
             isDelivered :false,
             paymentStatus : "paid",
-            paymentDetails : checkout.paymentDetails
+            paymentDetails : checkout.paymentDetails,
+            status : "Processing"
 
 
 

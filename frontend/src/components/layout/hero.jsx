@@ -1,8 +1,12 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
+import { fetchProductByFilters } from '../../redux/slices/productSlice';
+import { useDispatch } from 'react-redux';
 
 
 export const Hero = () => {
+
+  
     return (
       <section className='relative'> 
         
@@ -17,7 +21,7 @@ export const Hero = () => {
                     Explore our  vacation-ready outfits with fast worldwide shipping
                 </p>
                  
-                 <Link to="#"  className="px-3 py-2 bg-white text-black hover:text-gray-400 rounded text-lg">
+                 <Link to="/collections/all"  className="px-3 py-2 bg-white text-black hover:text-gray-400 rounded text-lg">
                  Shop Now
                  </Link>
               </div>

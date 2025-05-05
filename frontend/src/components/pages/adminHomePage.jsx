@@ -1,28 +1,27 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { fetchAdminProducts } from '../../redux/slices/adminProductSlice'
+import { fetchAllOrders } from '../../redux/slices/adminOrderSlice'
 
 export const AdminHomePage = () => {
 
-    const orders = [
-        {
-            _id: 23123,
-            user: {
-                name: "daya"
+    const dispatch = useDispatch()
+    const {products, loading :productLoading,error : productError} = useSelector((state)=> state.adminProducts)
+    const { orders ,
+        totalOrder ,
+        totalSale,
+        loading : orderLoading,
+        error: orderError} = useSelector((state)=> state. adminOrders)
 
-            },
-            totalPrice: 123,
-            status: "processing"
-        },
-        {
-            _id: 23123,
-            user: {
-                name: "daya"
 
-            },
-            totalPrice: 123,
-            status: "processing"
-        }
-    ]
+
+        useEffect(()=> {
+            dispatch(fetchAdminProducts())
+            dispatch(fetchAllOrders())
+        },[dispatch])
+
+  
     return (
         <div className=" mx-auto max-w-7xl p-8">
             <h1 className='text-2xl font-bold'>Admin Dashboard</h1>
@@ -31,18 +30,18 @@ export const AdminHomePage = () => {
 
                 <div className="border shadow-lg  p-4 rounded">
                     <h2 className='text-xl  mb-1'>Revenue</h2>
-                    <p>$1000</p>
+                    <p>{totalSale.toFixed(2)}</p>
                 </div>
 
                 <div className="border shadow-lg  p-4 rounded">
                     <h2 className='text-xl mb-1 '>Total Order</h2>
-                    <p className='mb-1'>$1000</p>
+                    <p className='mb-1'>{totalOrder}</p>
                     <Link to="/admin/orders" className='underline text-blue-400'>Manage Order</Link>
                 </div>
 
                 <div className="border shadow-lg  p-4 rounded">
-                    <h2 className='text-xl mb-1 '>Revenue</h2>
-                    <p>$1000</p>
+                    <h2 className='text-xl mb-1 '>Total Products</h2>
+                    <p>{products.length}</p>
                     <Link to="/admin/products" className='underline text-blue-400'>Manage Products</Link>
                 </div>
 
@@ -59,10 +58,7 @@ export const AdminHomePage = () => {
                             <th className="px-3 py-2 whitespace-nowrap">Order Id</th>
                             <th className="px-3 py-2 whitespace-nowrap">User</th>
                             <th className="px-3 py-2 whitespace-nowrap">Total Price</th>
-                            <th className="px-3 py-2 whitespace-nowrap">Status</th>
-                            <th className="px-3 py-2 whitespace-nowrap">Order Id</th>
-                            <th className="px-3 py-2 whitespace-nowrap">User</th>
-                            <th className="px-3 py-2 whitespace-nowrap">Total Price</th>
+                     
                             <th className="px-3 py-2 whitespace-nowrap">Status</th>
                         </tr>
                     </thead>
@@ -72,11 +68,8 @@ export const AdminHomePage = () => {
                                 <tr className="hover:bg-slate-50 border" key={index}>
                                     <td className="p-4">{order._id}</td>
                                     <td className="p-4">{order.user.name}</td>
-                                    <td className="p-4">{order.totalPrice}</td>
-                                    <td className="p-4">{order.status}</td>
-                                    <td className="p-4">{order._id}</td>
-                                    <td className="p-4">{order.user.name}</td>
-                                    <td className="p-4">{order.totalPrice}</td>
+                                    <td className="p-4">{order.totalPrice.toFixed(2)}</td>
+                                  
                                     <td className="p-4">{order.status}</td>
                                 </tr>
                             ))

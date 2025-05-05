@@ -61,7 +61,7 @@ export const   OrderConfirmation = () => {
 
                 <div className='mb-20'>
                   {checkout?.checkoutItems?.map((product,index)=> (
-                    <div className='flex justify-between mb-4 border-b p-2'>
+                    <div key={index} className='flex justify-between mb-4 border-b p-2'>
                         <div className='flex items-start'>
                             <img className='w-16 h-16 object-cover mr-4 rounded' src={product.image} alt={product.name}/>
 

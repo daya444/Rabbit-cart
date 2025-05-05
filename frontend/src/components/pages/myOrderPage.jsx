@@ -1,240 +1,33 @@
 import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { fetchOrders } from '../../redux/slices/orderSlice'
 
 export  const MyOrderPage = () => {
 
 
-    const [order,setOrder] = useState([])
+   
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const {orders,loading,error} = useSelector((state)=>state.order)
+
+
 
 
     useEffect(()=>{
+        dispatch(fetchOrders())
 
-        setTimeout(()=>{
-
-            const mockOrders = [
-                {
-                    _id : 1234,
-                    createdAt : new Date(),
-                    shippingAddress : false,
-                    orderItems : [
-                        {
-                            name : "product 1",
-                            image : "https://picsum.photos/200?random=13"
-                        }
-                    ],
-
-                    totalPrice : 100,
-                    isPaid : true
-
-                },
-                {
-                    _id : 1234,
-                    createdAt : new Date(),
-                    shippingAddress : {city:"coimbatore" , country : "india"},
-                    orderItems : [
-                        {
-                            name : "product 1",
-                            image : "https://picsum.photos/200?random=13"
-                        }
-                    ],
-
-                    totalPrice : 100,
-                    isPaid : true
-
-                },
-                {
-                    _id : 1234,
-                    createdAt : new Date(),
-                    shippingAddress : {city:"coimbatore" , country : "india"},
-                    orderItems : [
-                        {
-                            name : "product 1",
-                            image : "https://picsum.photos/200?random=13"
-                        }
-                    ],
-
-                    totalPrice : 100,
-                    isPaid : true
-
-                },
-                {
-                    _id : 1234,
-                    createdAt : new Date(),
-                    shippingAddress : {city:"coimbatore" , country : "india"},
-                    orderItems : [
-                        {
-                            name : "product 1",
-                            image : "https://picsum.photos/200?random=13"
-                        }
-                    ],
-
-                    totalPrice : 100,
-                    isPaid : true
-
-                },
-                {
-                    _id : 1234,
-                    createdAt : new Date(),
-                    shippingAddress : {city:"coimbatore" , country : "india"},
-                    orderItems : [
-                        {
-                            name : "product 1",
-                            image : "https://picsum.photos/200?random=13"
-                        }
-                    ],
-
-                    totalPrice : 100,
-                    isPaid : true
-
-                },
-                {
-                    _id : 1234,
-                    createdAt : new Date(),
-                    shippingAddress : {city:"coimbatore" , country : "india"},
-                    orderItems : [
-                        {
-                            name : "product 1",
-                            image : "https://picsum.photos/200?random=13"
-                        }
-                    ],
-
-                    totalPrice : 100,
-                    isPaid : true
-
-                },
-                {
-                    _id : 1234,
-                    createdAt : new Date(),
-                    shippingAddress : {city:"coimbatore" , country : "india"},
-                    orderItems : [
-                        {
-                            name : "product 1",
-                            image : "https://picsum.photos/200?random=13"
-                        }
-                    ],
-
-                    totalPrice : 100,
-                    isPaid : true
-
-                },
-                {
-                    _id : 1234,
-                    createdAt : new Date(),
-                    shippingAddress : {city:"coimbatore" , country : "india"},
-                    orderItems : [
-                        {
-                            name : "product 1",
-                            image : "https://picsum.photos/200?random=13"
-                        }
-                    ],
-
-                    totalPrice : 100,
-                    isPaid : true
-
-                },
-                {
-                    _id : 1234,
-                    createdAt : new Date(),
-                    shippingAddress : {city:"coimbatore" , country : "india"},
-                    orderItems : [
-                        {
-                            name : "product 1",
-                            image : "https://picsum.photos/200?random=13"
-                        }
-                    ],
-
-                    totalPrice : 100,
-                    isPaid : true
-
-                },
-                {
-                    _id : 1234,
-                    createdAt : new Date(),
-                    shippingAddress : {city:"coimbatore" , country : "india"},
-                    orderItems : [
-                        {
-                            name : "product 1",
-                            image : "https://picsum.photos/200?random=13"
-                        }
-                    ],
-
-                    totalPrice : 100,
-                    isPaid : true
-
-                },
-                {
-                    _id : 1234,
-                    createdAt : new Date(),
-                    shippingAddress : {city:"coimbatore" , country : "india"},
-                    orderItems : [
-                        {
-                            name : "product 1",
-                            image : "https://picsum.photos/200?random=13"
-                        }
-                    ],
-
-                    totalPrice : 100,
-                    isPaid : true
-
-                },
-                {
-                    _id : 1234,
-                    createdAt : new Date(),
-                    shippingAddress : {city:"coimbatore" , country : "india"},
-                    orderItems : [
-                        {
-                            name : "product 1",
-                            image : "https://picsum.photos/200?random=13"
-                        }
-                    ],
-
-                    totalPrice : 100,
-                    isPaid : true
-
-                },
-                {
-                    _id : 1234,
-                    createdAt : new Date(),
-                    shippingAddress : {city:"coimbatore" , country : "india"},
-                    orderItems : [
-                        {
-                            name : "product 1",
-                            image : "https://picsum.photos/200?random=13"
-                        }
-                    ],
-
-                    totalPrice : 100,
-                    isPaid : true
-
-                },
-                  {
-                    _id : 1234,
-                    createdAt : new Date(),
-                    shippingAddress : {city:"coimbatore" , country : "india"},
-                    orderItems : [
-                        {
-                            name : "product 1",
-                            image : "https://picsum.photos/200?random=13"
-                        }
-                    ],
-
-                    totalPrice : 100,
-                    isPaid : true
-
-                }
-            ]
-
-
-            setOrder(mockOrders)
-
-        },1000)
-    },[])
+       
+    },[dispatch])
 
 
 const handleRowClick =(id)=>{
     navigate(`/order/${id}`)
 }
+
+if (loading) return <p>loading ...</p>
+if(error) return <p>{error}..</p>
+
 
 
   return (
@@ -263,9 +56,9 @@ const handleRowClick =(id)=>{
                     
                 </thead>
                 <tbody>
-                   {order.length > 0 ? (
+                   {orders.length > 0 ? (
                       
-                      order.map((order,index)=>(
+                      orders.map((order,index)=>(
                         <tr key={index} onClick={()=>handleRowClick(order._id)} className='border-b cursor-pointer hover:bg-gray-50 '>
                             <td className='py-2 px-2 sm:py-4 sm:px-2'>
                                 <img

@@ -112,11 +112,12 @@ const adminSlice = createSlice({
             state.loading = true;
         })
         .addCase(updateUser.fulfilled,(state,action)=>{
-           const updatedUser = action.payload;
+           const updatedUser = action.payload.user;
            const findIndex = state.users.findIndex((user)=> user._id === updatedUser._id)
            if(findIndex !== -1){
             state.users[findIndex]=updatedUser
            }
+           state.loading = false;
         })
         .addCase(updateUser.rejected, (state, action) => {
             state.loading = false;
@@ -142,7 +143,7 @@ const adminSlice = createSlice({
             })
             .addCase(deleteUser.fulfilled, (state, action) => {
                 state.loading = false;
-                state.users = state.users.filter((user) => user.id !== action.payload.id);
+                state.users = state.users.filter((user) => user._id !== action.payload);
             })
             .addCase(deleteUser.rejected, (state, action) => {
                 state.loading = false;

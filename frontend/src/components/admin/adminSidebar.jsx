@@ -1,12 +1,18 @@
 import React from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { FaUsers, FaBox, FaShoppingCart, FaStore,FaSignOutAlt  } from 'react-icons/fa'
+import { useDispatch } from 'react-redux'
+import { logout } from '../../redux/slices/authSlice'
+import { clearCart } from '../../redux/slices/cartSlice'
 
 export const AdminSidebar = () => {
 
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const handleLogout = ()=> {
+      dispatch(logout())
+      dispatch(clearCart())
         navigate("/")
     }
   return (

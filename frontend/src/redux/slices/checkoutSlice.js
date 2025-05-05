@@ -14,7 +14,7 @@ export const createCheckout = createAsyncThunk(
           },
         }
       );
-      console.log("Checkout API Response:", response.data);
+      
       return response.data;
       
 

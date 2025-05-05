@@ -12,7 +12,7 @@ import {useDispatch, useSelector} from "react-redux"
     
   const navigate = useNavigate()
   const location = useLocation()
-  const {user,guestId} = useSelector((state)=>state.auth)
+  const {user,guestId ,loading} = useSelector((state)=>state.auth)
   const {cart} = useSelector((state)=>state.cart)
 
 
@@ -106,7 +106,7 @@ import {useDispatch, useSelector} from "react-redux"
                 className='bg-black text-white w-full py-2 rounded hover:bg-gray-700 font-semibold'
                 type='submit'
                 >
-                    Sign Up
+                   {loading ? "loading..." : "Sign Up"}
                 </button>
             
 
